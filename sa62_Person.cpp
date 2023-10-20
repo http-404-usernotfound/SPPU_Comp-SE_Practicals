@@ -84,11 +84,11 @@ int main() {
 	while (true){
 		cout<<endl<<endl;
 		cout<<"(1) - Default constructor.\n"
-			  "(2) - Parameterised constructor.\n"
-			  "(3) - No. of entries.\n"
-			  "(4) - Calculate age.\n"
-			  "(5) - Taller student.\n"
-			  "(6) - Exit.\n";
+			"(2) - Parameterised constructor.\n"
+			"(3) - No. of entries.\n"
+			"(4) - Calculate age.\n"
+			"(5) - Taller student.\n"
+			"(6) - Exit.\n";
 		cout<<"Enter your choice >> ";cin>>choice;
 
 		switch(choice){
