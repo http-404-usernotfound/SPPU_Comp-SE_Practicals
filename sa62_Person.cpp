@@ -17,9 +17,9 @@ public:
 		display();
 	}
 
-	Person(const Person &p){
-		name = p.name, bloodGrp = p.bloodGrp, address = p.address;
-		ipn = p.ipn, drNo = p.drNo, contactNo = p.contactNo, height = p.height, rollNo = p.rollNo, dob = p.dob;
+	Person(Person* p){
+		name = new string(*(p->name)), bloodGrp = new string(*(p->bloodGrp)), address = new string(*(p->address));
+		ipn = p->ipn, drNo = p->drNo, contactNo = p->contactNo, height = p->height, rollNo = p->rollNo, dob = p->dob;
 		count++;
 		display();
 	}
@@ -31,6 +31,28 @@ public:
 		*name = n, *bloodGrp = b, *address = a;
 		count++;
 		display();
+	}
+
+	void displayRow(){
+		cout.setf(ios::left, ios::adjustfield);
+		cout.width(20); cout<<*name;
+		cout.setf(ios::left, ios::adjustfield);
+		cout.width(13); cout<<*bloodGrp;
+		cout.setf(ios::left, ios::adjustfield);
+		cout.width(15); cout<<*address;
+		cout.setf(ios::left, ios::adjustfield);
+		cout.width(10); cout<<ipn;
+		cout.setf(ios::left, ios::adjustfield);
+		cout.width(22); cout<<drNo;
+		cout.setf(ios::left, ios::adjustfield);
+		cout.width(18); cout<<contactNo;
+		cout.setf(ios::left, ios::adjustfield);
+		cout.width(10); cout<<height;
+		cout.setf(ios::left, ios::adjustfield);
+		cout.width(12); cout<<rollNo;
+		cout.setf(ios::left, ios::adjustfield);
+		cout.width(13); cout<<dob<<endl;
+
 	}
 
 	void display(){
@@ -84,32 +106,35 @@ int main() {
 	while (true){
 		cout<<endl<<endl;
 		cout<<"(1) - Default constructor.\n"
-			"(2) - Parameterised constructor.\n"
-			"(3) - No. of entries.\n"
-			"(4) - Calculate age.\n"
-			"(5) - Taller student.\n"
-			"(6) - Exit.\n";
+			  "(2) - Parameterised constructor.\n"
+			  "(3) - Copy constructor.\n"
+			  "(4) - No. of entries.\n"
+			  "(5) - Calculate age.\n"
+			  "(6) - Taller student.\n"
+			  "(7) - Display Students.\n"
+			  "(8) - Exit.\n";
 		cout<<"Enter your choice >> ";cin>>choice;
+		cout<<endl;
 
 		switch(choice){
 			case 1:{
-				Person p = Person();
+				persons[Person::count-1] = new Person;
 				break;
 			}
 
 			case 2:{
-				name = new string;
+				name = new string; bloodGrp = new string; address = new string;
+				cout<<"\nEnter details of student:\n";
 				cout<<"Enter Name: "; cin>>*name;
-				bloodGrp = new string;
 				cout<<"Enter Blood Group: "; cin>>*bloodGrp;
-				address = new string;
 				cout<<"Enter Address: "; cin>>*address;
 				cout<<"Enter IPN: "; cin>>ipn;
 				cout<<"Enter Driving license number: "; cin>>drNo;
 				cout<<"Enter Contact Number: "; cin>>contactNo;
 				cout<<"Enter Height: "; cin>>height;
 				cout<<"Enter Roll Number: "; cin>>rollNo;
-				cout<<"Enter DOB: "; cin>>dob;
+				cout<<"Enter Year of Birth: "; cin>>dob;
+				cout<<endl;
 
 				persons[Person::count-1] = new Person (*name, *bloodGrp, *address, ipn, drNo, contactNo, height, rollNo, dob);
 
@@ -117,9 +142,18 @@ int main() {
 			}
 
 			case 3:
+				cout<<"Which student do you want to copy?\n";
+				int i;
+				for(i = 0; i<Person::count; i++){ cout<<"("<<i+1<<") - "; persons[i]->display();}
+				cout<<"\nEnter choice: ";cin>>i;
+				persons[Person::count-1] = new Person (persons[i-1]);
+
+				break;
+
+			case 4:
 				Person::displayCount();
 				break;
-			case 4:{
+			case 5:{
 				int i;
 				cout<<"Calculate age of which student?\n";
 				for(i = 0; i<Person::count; i++){ cout<<"("<<i+1<<") - "; persons[i]->display();}
@@ -128,16 +162,34 @@ int main() {
 				cout<<"\nAge is: "<<a.calculateAge(persons[i-1])<<endl;
 				break;
 			}
-			case 5:
+			case 6:
 				Person *temp;
 				temp = persons[0];
 				for(int i = 0; i<Person::count-1; i++) temp = temp->compare(persons[i+1]);
 				cout<<"\nTallest student is: "; temp->display();
 				break;
-			case 6:
+			case 7:
+				cout<<"###############################################################################################################################################\n";
+				cout<<"Sr No.    ";
+				cout.setf(ios::left, ios::adjustfield);
+				cout.width(20); cout<<"Name";
+				cout<<"Blood Grp    ";
+				cout.setf(ios::left, ios::adjustfield);
+				cout.width(15); cout<<"Address";
+				cout.setf(ios::left, ios::adjustfield);
+				cout.width(10); cout<<"IPN";
+				cout<<"Driving license No.   ";
+				cout<<"Contact Number    ";
+				cout<<"Height    ";
+				cout<<"Roll No.    ";
+				cout<<"Year of Birth\n";
+				cout<<"###############################################################################################################################################\n";
+				for(int i = 0; i<Person::count; i++){ cout.width(10);cout<<i+1; persons[i]->displayRow();}
+				break;
+			case 8:
 				cout<<"Exiting...";
 				return 0;
 		}
+
 	}
 }
-
