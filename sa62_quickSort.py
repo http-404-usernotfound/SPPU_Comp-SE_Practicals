@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
 def acceptData(arr):
     size = int(input("Enter number of students: "))
     print("Enter percentages of the students:")
@@ -10,12 +7,7 @@ def acceptData(arr):
 
 
 def quickSort(arr, size):
-    for Pass in range(size):
-        for j in range(size - 1):
-            if arr[j] > arr[j+1]:
-                temp = arr[j+1]
-                arr[j+1] = arr[j]
-                arr[j] = temp
+    pass
 
 
 def main():
