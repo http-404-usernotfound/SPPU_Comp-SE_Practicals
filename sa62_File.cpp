@@ -1,3 +1,11 @@
+//============================================================================
+// Name        : sa62_File.cpp
+// Author      : 
+// Version     :
+// Copyright   : Your copyright notice
+// Description : Hello World in C++, Ansi-style
+//============================================================================
+
 #include <iostream>
 #include<fstream>
 
@@ -44,30 +52,30 @@ int main() {
 
 		switch(input){
 		case 1:
-			f.open("st_data.csv", ios::in | ios::out);
+			f.open("st_data.txt", ios::in | ios::out);
 			for(int i = 0; i< size; i++){
-				f.write((char*)&stds[i].name, sizeof(stds[i].name));
-				f<<", ";
-				f.write((char*)&stds[i].phoneNo, sizeof(stds[i].phoneNo));
+				f.write((char*)&stds[i], sizeof(stds[i]));
 			} f.close();
 			break;
 		case 2:
 			for(int i = 0; i < size; i++)
 				stds[i].display();
 			break;
-		case 4:
+		case 4:{
 			char pOld[10], pNew[10];
+			int j = 0;
 			cout<<"Enter old/current phone number: "; cin>> pOld;
 			for(int i = 0; i < size; i++){
 				if(stds[i].phoneNo == pOld){
 					cout<<"Enter new phone number: "; cin>>pNew;
 					stds[i].phoneNo = pNew;
 					cout<<"Phone number updated :)";
+					j = 1;
 					break;
 				}
-			}
-			cout<<"Phone number not found :(";
+			}if (j ==1)cout<<"Phone number not found :(";
 			break;
+		}
 
 		case 5:
 			cout<<"Exiting...";
@@ -81,16 +89,18 @@ int main() {
 			switch(choice){
 			case 1:{
 				string n;
+				int j = 0;
 				cout<<"Enter the name: "; cin>>n;
 				for(int i = 0; i < size; i++){
 					if (stds[i].name == n){
 						cout<<"Student found!\n";
 						stds[i].display();
+						j = 1;
 						break;
 					}
-						cout<<"Student not found:(";
-						break;
-				} break;
+				}
+				if (j == 0) cout<<"Student not found:(";
+				break;
 			}
 
 			case 2:{
@@ -112,4 +122,3 @@ int main() {
 
 	return 0;
 }
-
