@@ -1,5 +1,5 @@
 #include <iostream>
-#include<fstream>
+#include <fstream>
 
 using namespace std;
 
@@ -18,7 +18,7 @@ public:
 	}
 
 	void accept(){
-		cout<<"Enter name: "; cin>> name;
+		cout<<"\nEnter name: "; cin>> name;
 		cout<<"Enter phone number: "; cin>> phoneNo;
 	}
 
@@ -26,6 +26,7 @@ public:
 
 int main() {
 	int size = 0;
+
 	cout<<"Enter number of students: "; cin>> size;
 	Student *stds = new Student[size];
 	cout<<"Enter the data:\n";
@@ -44,28 +45,42 @@ int main() {
 
 		switch(input){
 		case 1:
-			f.open("st_data.txt", ios::in | ios::out);
-			for(int i = 0; i< size; i++){
+			f.open("st_data.txt", ios::out);
+			for(int i = 0; i< size; i++)
 				f.write((char*)&stds[i], sizeof(stds[i]));
-			} f.close();
+			f.close();
 			break;
-		case 2:
-			for(int i = 0; i < size; i++)
-				stds[i].display();
+
+		case 2:{
+			Student *s = new Student;
+			f.open("st_data.txt", ios::in);
+			for(int i = 0; i < size; i++){
+				f.read((char*)s, sizeof(stds[i]));
+				s->display();
+			}
+			f.close();
 			break;
+		}
+
 		case 4:{
 			char pOld[10], pNew[10];
-			int j = 0;
+			int k = 1;
 			cout<<"Enter old/current phone number: "; cin>> pOld;
-			for(int i = 0; i < size; i++){
-				if(stds[i].phoneNo == pOld){
+			f.open("st_data.txt", ios::in);
+			Student *s = new Student;
+			for(int i = 0; i< size; i++){
+				f.read((char*)s, sizeof(stds[i]));
+				if(s->phoneNo == pOld){
 					cout<<"Enter new phone number: "; cin>>pNew;
+					s->phoneNo = pNew;
 					stds[i].phoneNo = pNew;
 					cout<<"Phone number updated :)";
-					j = 1;
+					k = 0;
 					break;
 				}
-			}if (j ==1)cout<<"Phone number not found :(";
+			}
+			f.close();
+			if(k) cout<<"Phone number not found :(";
 			break;
 		}
 
@@ -74,43 +89,50 @@ int main() {
 			return 0;
 
 
-		case 3:
-			string key;
+		case 3:{
 			int choice;
 			cout<<"1. By Name		2. By Phone Number: "; cin>>choice;
 			switch(choice){
 			case 1:{
-				string n;
-				int j = 0;
+				char n[20];
+				Student *s = new Student;
+				int j = 1;
+				f.open("st_data.txt", ios::in);
 				cout<<"Enter the name: "; cin>>n;
 				for(int i = 0; i < size; i++){
-					if (stds[i].name == n){
-						cout<<"Student found!\n";
-						stds[i].display();
-						j = 1;
+					f.read((char*)s, sizeof(stds[i]));
+					if (s->name == n){
+						cout<<"Student found :)\n";
+						s->display();
+						j = 0;
 						break;
 					}
 				}
-				if (j == 0) cout<<"Student not found:(";
+				f.close();
+				if(j) cout<<"Student not found :(\n";
 				break;
 			}
 
 			case 2:{
-				string p;
+				char p[10];
+				int j = 1;
+				Student *s = new Student;
+				f.open("st_data.txt", ios::in);
 				cout<<"Enter Phone number: "; cin>> p;
 				for(int i = 0; i < size; i++){
-					if (stds[i].phoneNo == p){
-						cout<<"Student found!\n";
-						stds[i].display();
+					f.read((char*)s, sizeof(stds[i]));
+					if (s->phoneNo == p){
+						j = 0;
+						cout<<"Student found :)\n";
+						s->display();
 						break;
 					}
-				} cout<<"Student not found:(";
-				break;
+				}
+				f.close();
+				if(j) cout<<"Student not found :(\n";
 			}
-			}break;
+			}
 		}
-	}while(input != 5);
-
-
-	return 0;
+		}
+	}while(true);
 }
