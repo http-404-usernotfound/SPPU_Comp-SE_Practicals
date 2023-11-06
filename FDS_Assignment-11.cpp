@@ -18,19 +18,31 @@ public:
 };
 
 void queue::add(int j){
-	a[rear++] = j;
+	if(rear < MAX-1) a[rear++] = j;
+	
+	else cout<<"\nQueue is FULL!\n";
 }
 
-int stack::isEmpty(){
+int queue::del(){
+	return a[front];
+	for(int i = 1; i <= rear; i++){
+		a[front
+	}
+}
+
+int queue::isEmpty(){
 	return rear;
 }
 
-void stack::display(){
+int queue::peek(){
+	return a[front];
+}
+
+void queue::display(){
 	for(int i = 0; i < rear; i++){
 		cout<<a[i]<<" ";
 	}
 	cout<<endl;
-		
 }
 
 int main(){
