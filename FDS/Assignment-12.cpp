@@ -15,10 +15,9 @@ public:
 
 	void enqueueFront(int n){
 		if (count == MAX){
-			cout<<"Queue is FULL!\n";
-			return;
+			throw runtime_error("Queue is FULL");
 		}
-		if(a[front]!='\0')
+		if(a[front+1]!='\0')
 			for(int i = rear; i>front; i--)
 				a[i+1] = a[i];
 
@@ -29,8 +28,7 @@ public:
 
 	void enqueueRear(int n){
 		if (count == MAX){
-			cout<<"Queue is FULL!\n";
-			return;
+			throw runtime_error("Queue is FULL");
 		}
 		a[++rear] = n;
 		count++;
@@ -41,27 +39,34 @@ public:
 			cout<<"Queue is EMPTY!\n";
 			return'\0';
 		}
-		return a[front];
-		a[front--] = '\0';
+		
+		int t = a[0];
+		for(int i = 0; i<rear;i++) a[i] = a[i+1];
+		front--;
+		a[rear--] = '\0';
 		count--;
+		return t;
 	}
 
 	int dequeueRear(){
-		if(!count){
-			cout<<"Queue is EMPTY!\n";
+		if(!count || rear == front){
+			cout<<"Rear Queue is EMPTY!\n";
 			return '\0';
 		}
 
-		return a[rear];
+		int r = a[front+1];
+		for(int i = front+1; i<=rear;i++) a[i] = a[i+1];
+		
 		a[rear--] = '\0';
 		count--;
+		
+		return r;
 	}
 
 	void display(){
 		cout<<"The Queue is:";
-		for(int i = 0; i<front; i++) cout<<" "<<a[i];
-		for(int i = front; i<rear; i++) cout<<" "<<a[i];
-		cout<<endl;
+		for(int i = 0; i<count; i++) cout<<" "<<a[i];
+		cout<<endl<<endl;;
 	}
 };
 
@@ -80,22 +85,30 @@ int main() {
 		switch(choice){
 		case 1:
 			cout<<"Enter value to push: "; cin>>elmnt;
+			try{
 			dq.enqueueFront(elmnt);
+			}catch(runtime_error &e){
+				cout<<"Error: "<<e.what()<<endl;
+			}
 			break;
 
 		case 2:
 			cout<<"Enter value to push: "; cin>>elmnt;
+			try{
 			dq.enqueueRear(elmnt);
+			}catch(runtime_error &e){
+				cout<<"Error: "<<e.what()<<endl;
+			}
 			break;
 
 		case 3:
 			elmnt = dq.dequeueFront();
-			cout<<"Value: "<<elmnt<<endl;
+			cout<<"Value: "<<elmnt<<endl<<endl;
 			break;
 
 		case 4:
 			elmnt = dq.dequeueRear();
-			cout<<"Value: "<<elmnt<<endl;
+			cout<<"Value: "<<elmnt<<endl<<endl;
 			break;
 
 		case 5:
@@ -103,6 +116,7 @@ int main() {
 			break;
 
 		case 6:
+			cout<<"Exiting...\n";
 			return 0;
 		}
 
