@@ -6,12 +6,42 @@ def acceptData(arr):
     return size
 
 
-def quickSort(arr, size):
-    pass
+def partition(arr, start, end):
+    pivot = start
+    left = start+1
+    right = end
+
+    while True:
+        if arr[left] <= arr[pivot]:
+            left += 1
+        if arr[right] >= arr[pivot]:
+            right -= 1
+        if right < left:
+            temp = arr[pivot]
+            arr[pivot] = arr[right]
+            arr[right] = temp
+            pivot = right
+            break
+        if arr[left] > arr[right]:
+            temp = arr[left]
+            arr[left] = arr[right]
+            arr[right] = temp
+
+    return pivot
+
+
+def quickSort(arr, start, end):
+    if start >= end:
+        return None
+
+    pivot = partition(arr, start, end)
+
+    quickSort(arr, start, pivot - 1)
+    quickSort(arr, pivot + 1, end)
+    return arr
 
 
 def main():
-    size = None
     scores = []
     while True:
         choice = int(input('''
@@ -19,13 +49,15 @@ def main():
   (2) - Quick Sort
   (3) - Display array
   (4) - Exit
-    Enter yout choice: '''))
-    
+    Enter your choice: '''))
+
         if choice == 1:
             scores = []
             size = acceptData(scores)
         elif choice == 2:
-            quickSort(scores, size)
+            start = 0
+            end = len(scores) - 1
+            quickSort(scores, start, end)
         elif choice == 3:
             print("Array is:", scores)
         elif choice == 4:
