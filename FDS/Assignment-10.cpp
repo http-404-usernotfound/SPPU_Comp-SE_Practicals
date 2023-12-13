@@ -2,8 +2,6 @@
 
 using namespace std;
 
-const char prec[] = {};
-
 class stack{
 	int ptr, *st;
 	
