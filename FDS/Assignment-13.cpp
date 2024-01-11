@@ -17,24 +17,25 @@ class queue{
 	void add(int o){
 		if(count == MAX) throw runtime_error("Queue is FULL!");
 		
-		if(rear == MAX-1) rear = -1;
-		
-		orders[++rear] = o;
+		rear = (rear+1)%MAX;
+		orders[rear] = o;
 		count++;
 	}
 	
 	int del(){
 		if(!count) throw runtime_error("Queue is EMPTY!");
-		if(front == MAX) front = 0;
 		count--;
-		return orders[front++];
+		int temp = orders[front];
+		orders[front] = '\0';
+		front = (front+1)%MAX;
+		return temp;
 	}
 	
 	void display(){
-		int i;
-		for(i = front; i!=rear; i++){
-			if(i == MAX) i = 0;
+		int i = front;
+		while(i != rear){
 			cout<<orders[i]<<" ";
+			i = (i+1)%MAX;
 		}
 		cout<<orders[i]<<endl<<endl;
 	}
