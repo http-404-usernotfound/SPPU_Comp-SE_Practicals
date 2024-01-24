@@ -129,12 +129,12 @@ def main():
     ht = HashTable(size)
     
     while True:
-        ch = int(input('''
-=========================
+        ch = int(input('''\n
+=========== MENU ===========
    (1) - Linear Probing
        (2) - Double Hashing
     (3) - Exit
-=========================
+============================
     Enter your choice: '''))
     
         if ch == 3:
@@ -144,13 +144,13 @@ def main():
     
             while True:
                 choice = int(input('''
-======SUB MENU=============
+========= SUB-MENU ===========
      (1) - Back to main menu
   (2) - Insert
       (3) - Delete
 (4) - Search
    (5) - Display
-===========================
+==============================
         Enter your choice: '''))
                 
                 if choice == 1:
