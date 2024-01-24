@@ -4,11 +4,6 @@ class Record:
     def __init__(self, key, data):
         self.data = data
         self.key = key
-    
-    def out(self):
-        print("Name:", self.data)
-        print("Number:", self.key)
-        print('')
 
 class HashTable:
     def __init__(self, size):
@@ -57,16 +52,41 @@ class HashTable:
         self.teleBook[index] = None
         self.count -= 1
         print("Record deleted at index:", index)
+
+    def searchLP(self, key):
+        index = self.hash1(key)
+        i = 0
+        while self.teleBook[index].key != key:
+            index += 1
+            i+=1
+            if i==self.size:
+                print("Entry not found!")
+                return None
+
+        return self.teleBook[index].data
+
+    def searchDH(self, key):
+        index = self.hash1(key)
+        i = 1
+        j = 0
+        while self.teleBook[index].key != key:
+            index = (self.hash1(key) + i*self.hash2(key))%self.size
+            j+=1
+            if j==self.size:
+                print("Element not found!")
+                return None
+
+        return self.teleBook[index].data
     
     def display(self):
         i = -1
+        print("Index | Number | Name")
         for record in self.teleBook:
-            i += 1
+            i +=1
+            print(' ', i, end=' ')
+            if record!=None:
+                print(f'     {record.key}      {record.data}', end='')
             print('')
-            print(i)
-            if record == None:
-                continue
-            record.out()
         
     def insertLinearProbe(self, rec):
         if self.isFull():
@@ -128,7 +148,8 @@ def main():
      (1) - Back to main menu
   (2) - Insert
       (3) - Delete
-   (4) - Display
+(4) - Search
+   (5) - Display
 ===========================
         Enter your choice: '''))
                 
@@ -157,7 +178,17 @@ def main():
                     number = int(input("Number: "))
                     ht.deleteDoubleHash(number)
                 
-                elif choice == 4:
+                elif choice == 4 and ch == 1:
+                    key = int(input("Key: "))
+                    value = ht.searchLP(key)
+                    print("Name:", value)
+
+                elif choice == 4 and ch == 2:
+                    key = int(input("Key: "))
+                    value = ht.searchDH(key)
+                    print("Name:", value)
+
+                elif choice == 5:
                     ht.display()
                 
                 else:
