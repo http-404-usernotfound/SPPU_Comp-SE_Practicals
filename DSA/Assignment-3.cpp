@@ -56,8 +56,7 @@ in main(){
 			cout<<"Enter the value: "; cin>>d
 			t.add(d);
 			break;
-
-		
+	
 		case 2:
 			int d;
 			cout<<"Enter value: "; cin>>d;
