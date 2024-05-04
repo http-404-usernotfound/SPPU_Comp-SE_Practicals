@@ -140,12 +140,10 @@ public:
 
 	void createDisplayVector(node* curr, int level){
 		if(curr==nullptr){
-			disp[level].push_back(' ');
+			disp[level].push_back(-999);
 			return;
 		}
-		cout<<"\nEx 3 "<<level;
 		disp[level].push_back(curr->data);
-		cout<<"\nEx 5 "<<curr->data;
 
 		createDisplayVector(curr->left, level+1);
 		createDisplayVector(curr->right, level+1);
@@ -157,20 +155,24 @@ public:
 		for(int i = 0; i<=height+1; i++)
 			disp.push_back(lvl);
 		this->createDisplayVector(root, 0);
-
-		for(int i = height; i>0; i++){
-			for(int j = i; j>0; j++){
-
+		int spaces[height+2] = {0, 2, 5, 10};
+		for(int i = 3; i<=height+2; i++) spaces[i] = spaces[i-1]/0.4545;
+		int level = 1;
+		for(int i = 0; i<=height; i++){
+			cout<<'\n';
+			for(int k = 0; k<spaces[height-i]; k++)cout<<' ';
+			for(int j = 0; j<level; j++){
+				if(disp[i][j]!=-999) cout<<disp[i][j];
+				else cout<<"  ";
+				for(int k = 0; k<spaces[height-i+1]; k++)cout<<' ';
 			}
+				level*=2;
 		}
-                      23
-          12                      34
-     10          13          32          45
-  99    11    99    99    99    99    99    99
-11 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11
-
-  23
-12  34
+//                      23
+//           12                      34
+//     10          13          32          45
+//  99    11    99    99    99    99    99    99
+//11 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11
 	}
 };
 
