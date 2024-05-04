@@ -1,50 +1,64 @@
 #include <iostream>
+#include <vector>
 using namespace std;
 
 class node{
+public:
 	int data;
 	node *left, *right;
-public:
-	node(int d=NULL, node* l=NULL, node* r=NULL){
+
+	node(int d=-1){
 		data = d;
-		left = l;
-		right = r;
+		left = right = nullptr;
 	}
 };
 
 class BST{
 	node*root;
-	int count, height;
+	int count, height, *xorder;
+	vector<vector<int>> disp;
 public:
 	BST(){
-		root = NULL;
+		root = nullptr;
 		count = height = 0;
 	}
 
 	void add(int data){
+		if(root == nullptr){
+			root = new node(data);
+			return;
+		}
+		bool right;
 		node* curr = root;
+		node* parent;
 		int i = 0;
-		while(curr->data!=NULL){
-			if(data>root->data)
+		while(curr!=nullptr){
+			parent = curr;
+			right = false;
+			if(data>curr->data){
 				curr = curr->right;
+				right = true;
+			}
 			else
 				curr = curr->left;
 			i++;
 		}
 		curr = new node(data);
+		if(right) parent->right = curr;
+		else parent->left = curr;
 		if(i>height) height = i;
+		count ++;
 	}
 
 	int search(int data){
 		node* curr = root;
 		int i = 0;
-		while(curr->data!=NULL){
-			if(data>root->data)
+		while(curr!=nullptr){
+			if(curr->data == data) return i;
+			if(data>curr->data)
 				curr = curr->right;
 			else
 				curr = curr->left;
-
-			if(curr->data == data) return i;
 			i++;
 		}
 		return -1;
@@ -54,49 +68,109 @@ public:
 		return height;
 	}
 
-	void preOrder(node*rt=root){
-		node *curr = rt;
-		if(!curr) return;
+	int* preOrder(node*curr=nullptr, bool first=true){
+		if(first){
+			curr=root;
+			xorder = nullptr;
+			xorder = (int*)malloc(sizeof(int)*(count+2));
+			xorder[0] = 0;
+		}
+		if(curr==nullptr) return nullptr;
 
-		cout<<curr->data<<' ';
+		xorder[++xorder[0]] = curr->data;
+		preOrder(curr->left, false);
 
-		preOrder(curr->left);
-		preOrder(curr->right);
+		preOrder(curr->right, false);
+
+		return xorder;
 	}
 
-	void postOrder(node*rt=root){
-		node *curr = rt;
-		if(!curr) return;
+	int* postOrder(node*curr=nullptr, bool first=true){
+		if(first){
+			curr = root;
+			xorder = nullptr;
+			xorder = (int*)malloc(sizeof(int)*(count+2));
+			xorder[0] = 0;
+		}
+		if(curr==nullptr) return nullptr;
 
-		postOrder(curr->left);
-		cout<<curr->data<<' ';
-		postOrder(curr->right);
+		postOrder(curr->left, false);
+		postOrder(curr->right, false);
+
+		xorder[++xorder[0]] = curr->data;
+
+		return xorder;
 	}
 
-	void inOrder(node*rt=root){
-		node *curr = rt;
-		if(!curr) return;
+	int* inOrder(node*curr=nullptr, bool first=true){
+		if(first){
+			curr = root;
+			xorder = nullptr;
+			xorder = (int*)malloc(sizeof(int)*(count+2));
+			xorder[0] = 0;
+		}
+		if (curr==nullptr) return nullptr;
 
-		inOrder(curr->left);
-		cout<<curr->data<<' ';
-		inOrder(curr->right);
+		inOrder(curr->left, false);
+		xorder[++xorder[0]] = curr->data;
+		inOrder(curr->right, false);
+
+		return xorder;
 	}
 
 	int minimum(){
 		node* curr = root;
 
-		while(!curr) curr = curr->left;
+		while(curr->left!=nullptr) curr = curr->left;
 
 		return curr->data;
 	}
 
-	BST mirror(){
-		BST mirr(root);
-		return mirr;
+	void mirror(node* curr=nullptr, bool first=true){
+		if(first) curr = root;
+		if(curr==nullptr) return;
+
+		node* temp = curr->left;
+		curr->left = curr->right;
+		curr->right = temp;
+
+		mirror(curr->left, false);
+		mirror(curr->right, false);
+	}
+
+	void createDisplayVector(node* curr, int level){
+		if(curr==nullptr){
+			disp[level].push_back(' ');
+			return;
+		}
+		cout<<"\nEx 3 "<<level;
+		disp[level].push_back(curr->data);
+		cout<<"\nEx 5 "<<curr->data;
+
+		createDisplayVector(curr->left, level+1);
+		createDisplayVector(curr->right, level+1);
 	}
 
 	void display(){
+		disp.clear();
+		vector<int> lvl;
+		for(int i = 0; i<=height+1; i++)
+			disp.push_back(lvl);
+		this->createDisplayVector(root, 0);
 
+		for(int i = height; i>0; i++){
+			for(int j = i; j>0; j++){
+
+			}
+		}
+                      23
+          12                      34
+     10          13          32          45
+  99    11    99    99    99    99    99    99
+11 11 11 11 11 11 11 11 11 11 11 11 11 11 11 11
+
+  23
+12  34
 	}
 };
 
@@ -104,7 +178,8 @@ int main() {
 	int choice;
 	BST bst;
 	while(true){
-		cout<<"(1) - Insert.\n"
+	 cout<<"\n========= MENU =========\n"
+			  "(1) - Insert.\n"
 			  "(2) - Search.\n"
 			  "(3) - Height.\n"
 			  "(4) - Pre-Order.\n"
@@ -117,45 +192,51 @@ int main() {
 			  "\nEnter your choice: ";cin>>choice;
 
 		switch(choice){
-		case 1:
+		case 1:{
 			int data;
 			cout<<"Enter element: "; cin>>data;
 			bst.add(data);
 			break;
-
-		case 2:
+		}
+		case 2:{
 			int data;
 			cout<<"Enter element: "; cin>>data;
-			int h = bst.search(data);
+			int h;
+			h = bst.search(data);
 			if(h>-1) cout<<"Element found at height: "<<h<<endl;
 			else cout<<"Element not found :(\n";
 			break;
-
+		}
 		case 3:
-			int h = bst.getHeight();
-			cout<<"\nHeigth is "<<h<<endl;
+			cout<<"\nHeigth is "<<bst.getHeight()<<endl;
 			break;
 
-		case 4:
-			bst.preOrder();
+		case 4:{
+			int *arr = bst.preOrder();
+			for(int i = 1; i<=arr[0]; i++) cout<<arr[i]<<' ';
+			cout<<endl<<endl;
 			break;
+		}
+		case 5:{
+			int *arr = bst.postOrder();
+			for(int i = 1; i<=arr[0]; i++) cout<<arr[i]<<' ';
+			cout<<endl<<endl;
+			break;
+		}
 
-		case 5:
-			bst.postOrder();
+		case 6:{
+			int *arr = bst.inOrder();
+			for(int i = 1; i<=arr[0]; i++) cout<<arr[i]<<' ';
+			cout<<endl<<endl;
 			break;
-
-		case 6:
-			bst.inOrder();
-			break;
+		}
 
 		case 7:
-			int mini = bst.minimum();
-			cout<<"Minimum is "<<bst.minimum<<endl<<endl;
+			cout<<"Minimum is "<<bst.minimum()<<endl<<endl;
 			break;
 
 		case 8:
-			BST mirr;
-
+			bst.mirror();
 			break;
 
 		case 9:

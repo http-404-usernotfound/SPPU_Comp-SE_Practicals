@@ -5,41 +5,84 @@ class node{
 public:
 	int data;
 	node* left, *right;
-	node(int d, node*l, node*r){
+	node(int d){
 		data = d;
-		left = l;
-		right = r;
+		left = right = nullptr;
 	}
 };
 
 class Tree{
 	node* root;
 	int count;
+public:
 	Tree(){
-		root = NULL;
+		root = nullptr;
 		count = 0;
 	}
 
 	void add(int data){
-		if(!root){
+		if(root==nullptr){
 			root = new node(data);
 			return;
 		}
+		bool right;
+		node* curr = root;
+		node* parent;
+		int i = 0;
+		while(curr!=nullptr){
+			parent = curr;
+			right = false;
+			if(data>curr->data){
+				curr = curr->right;
+				right = true;
+			}
+			else
+				curr = curr->left;
+			i++;
+		}
+		curr = new node(data);
+		if(right) parent->right = curr;
+		else parent->left = curr;
+		count ++;
 	}
 
-	void dlt(int data){
+	int dlt(int data){
+		node* curr = root;
+		int i = 0;
+		while(curr!=nullptr){
+			if(curr->data == data) curr = nullptr;
+			if(data>curr->data)
+				curr = curr->right;
+			else
+				curr = curr->left;
+			i++;
+		}
+		return -1;
 	}
 
 	int search(int data){
+		node* curr = root;
+		int i = 0;
+		while(curr!=nullptr){
+			if(curr->data == data) return i;
+			if(data>curr->data)
+				curr = curr->right;
+			else
+				curr = curr->left;
+			i++;
+		}
+		return -1;
 	}
 
 	void display(){
+		//Like display function of assignment 4		  
+		
 	}
 
 
 };
 
-in main(){
+int main(){
 	int choice;
 	Tree t;
 	while(true){
@@ -51,25 +94,27 @@ in main(){
 			  "\nEnter your choice: "; cin>>choice;
 
 		switch(choice){
-		case 1:
+		case 1:{
 			int d;
-			cout<<"Enter the value: "; cin>>d
+			cout<<"Enter the value: "; cin>>d;
 			t.add(d);
 			break;
-	
-		case 2:
+		}
+		case 2:{
 			int d;
 			cout<<"Enter value: "; cin>>d;
 			t.dlt(d);
 			break;
+		}
 
-		case 3:
+		case 3:{
 			int d;
 			cout<<"Enter value: "; cin>>d;
 			int lvl = t.search(d);
 			if(lvl>-1) cout<<"\nThe value was found at level: "<<lvl<<endl;
 			else cout<<"\nValue not found :(\n";
 			break;
+		}
 
 		case 4:
 			t.display();
