@@ -46,6 +46,7 @@ public:
 		if(curr == nullptr){
 			root->child = new node(chapter, 'c');
 			root->child->child = new node(name, 's');
+			return;
 		}
 		while(curr->name!=chapter && curr->next!=nullptr)  curr = curr->next;
 		if(curr->name!=chapter) {
@@ -64,26 +65,25 @@ public:
 	}
 
 	void addSubsection(string n){
-	cout<<"ex";
 		string chapter = "";
 		int i;
 		for(i = 0; n[i]!='.'; i++)
 			chapter += n[i];
 
-		i++;cout<<"ex";
+		i++;
 		string section = "";
 		for(i; n[i]!='.'; i++)
 			section += n[i];
-cout<<"ex";
+
 		i++;
 		string name = "";
 		for(i; n[i]!='\0'; i++)
 			name += n[i];
-		cout<<chapter<<section<<name;
+
 		node *curr = root->child;
 		if(curr == nullptr){
-			root->child = new node(chapter, 'c'); cout<<"ex";
-			root->child->child = new node(section, 's');cout<<"ex";
+			root->child = new node(chapter, 'c');
+			root->child->child = new node(section, 's');
 			curr->child->child->child = new node(name, 'e');
 			return;
 		}
