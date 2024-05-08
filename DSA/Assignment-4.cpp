@@ -71,8 +71,7 @@ public:
 	int* preOrder(node*curr=nullptr, bool first=true){
 		if(first){
 			curr=root;
-			xorder = nullptr;
-			xorder = (int*)malloc(sizeof(int)*(count+2));
+			xorder = new int [count +2];
 			xorder[0] = 0;
 		}
 		if(curr==nullptr) return nullptr;
@@ -88,8 +87,7 @@ public:
 	int* postOrder(node*curr=nullptr, bool first=true){
 		if(first){
 			curr = root;
-			xorder = nullptr;
-			xorder = (int*)malloc(sizeof(int)*(count+2));
+			xorder = new int [count+2];
 			xorder[0] = 0;
 		}
 		if(curr==nullptr) return nullptr;
@@ -105,8 +103,7 @@ public:
 	int* inOrder(node*curr=nullptr, bool first=true){
 		if(first){
 			curr = root;
-			xorder = nullptr;
-			xorder = (int*)malloc(sizeof(int)*(count+2));
+			xorder = new int [count+2];
 			xorder[0] = 0;
 		}
 		if (curr==nullptr) return nullptr;
