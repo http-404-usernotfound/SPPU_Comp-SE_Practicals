@@ -7,20 +7,21 @@ public:
 	int data;
 	node *left, *right;
 
-	node(int d=-1){
+	node(int d=-999){
 		data = d;
 		left = right = nullptr;
 	}
 };
 
 class BST{
-	node *root, *xorder;
-	int count;
-	vector<vector<int>> disp;
+	node *root, **xorder;
+	int count,index, iterations, *inorder;
+	bool threaded;
 public:
 	BST(){
 		root = nullptr;
 		count = 0;
+		threaded = false;
 	}
 
 	void add(int data){
@@ -46,47 +47,82 @@ public:
 		curr = new node(data);
 		if(right) parent->right = curr;
 		else parent->left = curr;
-		if(i>height) height = i;
 		count ++;
 	}
-	
-	int* inOrder(node*curr=nullptr, bool first=true){
+
+	void thread(node*curr=nullptr, bool first=true){
 		if(first){
 			curr = root;
-			xorder = nullptr;
-			xorder = new int [count+3];
-			xorder[1] = xorder[count+2] = new node;
-			xorder[0] = 1;
+			index = 1;
+			xorder = new node* [count+3];
+			xorder[0] = xorder[count+2] = new node(-999);
+			iterations = 0;
 		}
-		if (curr==nullptr) return nullptr;
-		
+		if (curr==nullptr) return;
+		iterations ++;
+		thread(curr->left, false);
+		xorder[index++] = curr;
+		thread(curr->right, false);
+	}
+
+	void inOrder(node*curr=nullptr, bool first=true){
+		if(first){
+			curr = root;
+			inorder = new int[count+1];
+			inorder[0] = 0;
+		}
+		if(curr==nullptr) return;
+		iterations ++;
 		inOrder(curr->left, false);
-		xorder[++xorder[0]] = curr;
+		inorder[++inorder[0]] = curr->data;
 		inOrder(curr->right, false);
-		
-		return xorder;
 	}
-	
+
+
 	void convert(){
-		this->inOrder();
-		for(int i = 2; i<xorder[0]+2; i++){
+		this->thread();
+		for(int i = 1; i<count+2; i++){
 			if(xorder[i]->left==nullptr) xorder[i]->left = xorder[i-1];
-			if(xorder[i]->right==nullptr) xorder[i]->right = xorder[i-1];
+			if(xorder[i]->right==nullptr) xorder[i]->right = xorder[i+1];
 		}
+		threaded = true;
 	}
-	
+
 	void display(){
-		
+		if(!threaded){
+			this->inOrder();
+			cout<<"Before threading:\n    Inorder traversal: ";
+			for(int i = 1; i<=inorder[0]; i++) cout<<inorder[i]<<' ';
+		}
+
+		else{
+			iterations = 0;
+			node* curr = root;
+			int prev = -999;
+			while(true){
+				while(curr->left->data!=prev) curr = curr->left;
+				cout<<curr->data<<' ';
+				curr = curr->right;
+				if(curr->data==-999) break;
+				cout<<curr->data<<' ';
+				prev = curr->data;
+				curr = curr->right;
+				iterations ++;
+			}
+		}
+		cout<<"\n\nIterations: "<<iterations<<endl;
 	}
 };
 
 int main(){
 	int choice;
-	Tree t;
+	BST t;
 	while(true){
-		cout<<"(1) - Add.\n"
+		cout<<"\n\n================ MENU ==================\n"
+			  "(1) - Add.\n"
 			  "(2) - Convert to threaded binary tree.\n"
-			  "(3) - Exit.\n"
+			  "(3) - Display.\n"
+			  "(4) - Exit.\n"
 			  "\nEnter your choice: "; cin>>choice;
 
 		switch(choice){
@@ -96,13 +132,16 @@ int main(){
 			t.add(d);
 			break;
 		}
-		
+
 		case 2:
 			t.convert();
 			break;
-		
 		case 3:
+			t.display();
+			break;
+		case 4:
 			cout<<"Exiting...\n";
+			return 0;
 		}
 	}
 }
